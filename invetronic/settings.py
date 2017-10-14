@@ -32,8 +32,10 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'inventario',
+    'authentication',
     'bootstrap_admin', # always before django.contrib.admin,
     'templated_docs',
+    'compressor',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -106,6 +108,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = (
+    # Django
+    'django.contrib.auth.backends.ModelBackend',
+)
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
@@ -148,3 +155,5 @@ STATIC_ROOT = '/'
 
 ADMIN_SITE_HEADER = "INVETRONIC"
 ADMIN_SITE_TITLE = "Panel de Administración"
+LOGIN_REDIRECT_URL = '/inventario/'
+LOGIN_URL = '/'

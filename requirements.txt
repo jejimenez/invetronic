@@ -3,3 +3,4 @@
  Pillow
  bootstrap-admin
  templated-docs
+ django_compressor

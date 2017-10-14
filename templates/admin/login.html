@@ -1,39 +1,42 @@
-{% extends "admin/base_site.html" %}
+{% load static %}
 {% load i18n static bootstrap_admin_template_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Creative - Bootstrap 3 Responsive Admin Template">
+    <meta name="author" content="GeeksLabs">
+    <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
+    <link rel="shortcut icon" href="img/favicon.png">
 
-{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/login.css" %}" />{% endblock %}
+    <title>Login Page 2 | Creative - Bootstrap 3 Responsive Admin Template</title>
 
-{% block bodyclass %}{{ block.super }} login{% endblock %}
+    <!-- Bootstrap CSS -->   
+    <link href="{% static 'bower_components/bootstrap/dist/css/bootstrap.min.css'%}" rel="stylesheet">
+    <!-- bootstrap theme -->
+    <link href="{% static 'bower_components/bootstrap/dist/css/bootstrap-theme.css'%}" rel="stylesheet">
+    <!--external css-->
+    <!-- font icon -->
+    <link href="{% static 'css/elegant-icons-style.css'%}" rel="stylesheet" />
+    <link href="{% static 'bower_components/components-font-awesome/css/font-awesome.css'%}" rel="stylesheet" />
+    <!-- Custom styles -->
+    <link href="{% static 'css/style.css'%}" rel="stylesheet">
+    <link href="{% static 'css/style-responsive.css'%}" rel="stylesheet" />
 
-{% block nav-global %}{% endblock %}
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <script src="js/respond.min.js"></script>
+    <![endif]-->
+</head>
 
-{% block branding %}{% endblock %}
+  <body class="login-img3-body">
 
-{% block content_title %}{% endblock %}
+    <div class="container">
 
-{% block breadcrumbs %}{% endblock %}
+      <form action="{{ app_path }}" method="post" class="login-form" id="login-form" >{% csrf_token %}
 
-{% block sidebar_menu %}{% endblock %}
-
-{% block content_container %}
-  <div id="content-main">
-    <div class="login-container">
-      {% if user.is_authenticated %}
-        <div role="alert" class="alert alert-warning">
-        {% blocktrans trimmed %}
-            You are authenticated as {{ username }}, but are not authorized to
-            access this page. Would you like to login to a different account?
-        {% endblocktrans %}
-        </div>
-      {% endif %}
-      <form action="{{ app_path }}" method="post" id="login-form" class="form form-horizontal" role="form">{% csrf_token %}
-        <a href="{% url 'admin:index' %}">
-          <img alt="{{ site_header|default:_('Django administration') }}" src="{% static "images/logo3.jpg" %}" class="logo-admin" width="284" height="196">
-        </a>
-        <fieldset>
-          <legend>
-            {{ site_header|default:_('Django administration') }} - Autenticación
-          </legend>
 
           {% if form.errors or form.non_field_errors %}
             <div role="alert" class="alert alert-danger errornote">
@@ -65,56 +68,39 @@
             </div>
           {% endif %}
 
-          <div class="row form-row">
-            <div class="col-sm-6 username">
-              <div class="input-group {% if form.username.errors %}has-error{% endif %}">
-                <span class="input-group-addon">
-                  <span class="glyphicon glyphicon-user"></span>
-                </span>
-                {{ form.username|add_class:'form-control'|placeholder:form.username.label }}
-              </div><!-- /input-group -->
-            </div><!-- /.col-sm-6 -->
-            <div class="col-sm-6 password">
-              <div class="input-group {% if form.password.errors %}has-error{% endif %}">
-                <span class="input-group-addon toggle-password">
-                  <span class="glyphicon glyphicon-eye-open"></span>
-                </span>
+        <div class="login-wrap">
+            <p class="login-img"><i class="icon_lock_alt"></i></p>
+            <div class="input-group {% if form.username.errors %}has-error{% endif %}">
+              <span class="input-group-addon"><i class="icon_profile"></i></span>
+              {{ form.username|add_class:'form-control'|placeholder:form.username.label }}
+            </div>
+            <div class="input-group {% if form.password.errors %}has-error{% endif %}">
+                <span class="input-group-addon"><i class="icon_key_alt"></i></span>
                 {{ form.password|add_class:'form-control'|placeholder:form.password.label }}
-                <span class="input-group-btn">
-                  <button type="submit" class="btn btn-primary">{% trans 'Log in' %}</button>
-                </span>
-              </div><!-- /input-group -->
-            </div><!-- /.col-sm-6 -->
-          </div>
+            </div>
+            <label class="checkbox">
+                <input type="checkbox" value="remember-me"> Remember me
+                <span class="pull-right"> <a href="#"> Forgot Password?</a></span>
+            </label>
+            <button class="btn btn-primary btn-lg btn-block" type="submit">{% trans 'Log in' %}</button>
+        </div>
+        <input type="hidden" name="next" value="{{ next }}" />
 
-          <input type="hidden" name="next" value="{{ next }}" />
 
-          {% url 'admin_password_reset' as password_reset_url %}
-          {% if password_reset_url %}
-            <p class="password-reset-link">
-              <a href="{{ password_reset_url }}">{% trans 'Forgotten your password or username?' %}</a>
-            </p>
-          {% endif %}
-        </fieldset>
       </form>
+    <div class="text-right">
+            <div class="credits">
+                <!-- 
+                    All the links in the footer should remain intact. 
+                    You can delete the links only if you purchased the pro version.
+                    Licensing information: https://bootstrapmade.com/license/
+                    Purchase the pro version form: https://bootstrapmade.com/buy/?theme=NiceAdmin
+                -->
+                <a href="https://bootstrapmade.com/free-business-bootstrap-themes-website-templates/">Business Bootstrap Themes</a> by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+            </div>
+        </div>
     </div>
 
-    <script type="text/javascript">
-      document.getElementById('id_username').focus();
-      (function ($) {
-        $(document).ready(function(){
-          $('.toggle-password').on('click', function() {
-            $span = $(this).find('span');
-            if ($span.hasClass('glyphicon-eye-open')) {
-              $span.removeClass('glyphicon-eye-open').addClass('glyphicon-eye-close');
-              $('#id_password').prop('type', 'text');
-            } else {
-              $span.removeClass('glyphicon-eye-close').addClass('glyphicon-eye-open');
-              $('#id_password').prop('type', 'password');
-            }
-          });
-        });
-      })(django.jQuery);
-    </script>
-  </div>
-{% endblock %}
+
+  </body>
+</html>

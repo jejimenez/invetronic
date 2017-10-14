@@ -20,8 +20,9 @@ from django.utils.translation import ugettext_lazy as _
 
 
 urlpatterns = [
+    url(r'^', include('authentication.urls')),
     url(r'^admin/', admin.site.urls),
-    url(r'^inventario/', include('inventario.urls'))
+    url(r'^inventario/', include('inventario.urls')),
 ]
 
 
