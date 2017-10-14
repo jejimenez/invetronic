@@ -1,9 +1,0 @@
-{% extends "base.html" %}
-<h1>Machines</h1>
-<ul>
-{% for machine in object_list %}
-    <li>{{ machine.name }} </li>
-{% empty %}
-    <li>No articles yet.</li>
-{% endfor %}
-</ul>
