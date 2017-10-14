@@ -1,0 +1,16 @@
+{% load compress %}
+{% load staticfiles %}
+
+{% compress css %}
+    <!-- Bootstrap CSS -->   
+    <link href="{% static 'bower_components/bootstrap/dist/css/bootstrap.min.css'%}" rel="stylesheet">
+    <!-- bootstrap theme -->
+    <link href="{% static 'bower_components/bootstrap/dist/css/bootstrap-theme.css'%}" rel="stylesheet">
+    <!--external css-->
+    <!-- font icon -->
+    <link href="{% static 'css/elegant-icons-style.css'%}" rel="stylesheet" />
+    <link href="{% static 'bower_components/components-font-awesome/css/font-awesome.css'%}" rel="stylesheet" />
+    <!-- Custom styles -->
+    <link href="{% static 'css/style.css'%}" rel="stylesheet">
+    <link href="{% static 'css/style-responsive.css'%}" rel="stylesheet" />
+{% endcompress %}

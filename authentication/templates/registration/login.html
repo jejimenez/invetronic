@@ -1,0 +1,106 @@
+{% load static %}
+{% load i18n static bootstrap_admin_template_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Creative - Bootstrap 3 Responsive Admin Template">
+    <meta name="author" content="GeeksLabs">
+    <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
+    <link rel="shortcut icon" href="img/favicon.png">
+
+    <title>Login Page 2 | Creative - Bootstrap 3 Responsive Admin Template</title>
+
+    <!-- Bootstrap CSS -->   
+    <link href="{% static 'bower_components/bootstrap/dist/css/bootstrap.min.css'%}" rel="stylesheet">
+    <!-- bootstrap theme -->
+    <link href="{% static 'bower_components/bootstrap/dist/css/bootstrap-theme.css'%}" rel="stylesheet">
+    <!--external css-->
+    <!-- font icon -->
+    <link href="{% static 'css/elegant-icons-style.css'%}" rel="stylesheet" />
+    <link href="{% static 'bower_components/components-font-awesome/css/font-awesome.css'%}" rel="stylesheet" />
+    <!-- Custom styles -->
+    <link href="{% static 'css/style.css'%}" rel="stylesheet">
+    <link href="{% static 'css/style-responsive.css'%}" rel="stylesheet" />
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <script src="js/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+  <body class="login-img2-body">
+
+    <div class="container">
+
+      <form action="{{ app_path }}" method="post" class="login-form" id="login-form" >{% csrf_token %}
+
+          {% if form.errors or form.non_field_errors %}
+            <div role="alert" class="alert alert-danger errornote">
+              {% if form.errors and not form.non_field_errors %}
+                <p>
+                  <strong>
+                    {% blocktrans count form.errors.items|length as counter %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktrans %}
+                  </strong>
+                </p>
+              {% endif %}
+
+              {% if form.non_field_errors %}
+                {% for error in form.non_field_errors %}
+                  <p>
+                    {{ error }}
+                  </p>
+                {% endfor %}
+              {% endif %}
+
+              {% if form.errors %}
+                {% for field in form %}
+                  {% for error in field.errors %}
+                    <p class="border-decoration">
+                      <strong><span class="glyphicon glyphicon-asterisk"></span> {{ field.label }}: </strong>{{ error|escape }}
+                    </p>
+                  {% endfor %}
+                {% endfor %}
+              {% endif %}
+            </div>
+          {% endif %}
+
+        <div class="login-wrap">
+            <p class="login-img"><i class="icon_lock_alt"></i></p>
+            <div class="input-group {% if form.username.errors %}has-error{% endif %}">
+              <span class="input-group-addon"><i class="icon_profile"></i></span>
+              {{ form.username|add_class:'form-control'|placeholder:form.username.label }}
+            </div>
+            <div class="input-group {% if form.password.errors %}has-error{% endif %}">
+                <span class="input-group-addon"><i class="icon_key_alt"></i></span>
+                {{ form.password|add_class:'form-control'|placeholder:form.password.label }}
+            </div>
+            <label class="checkbox">
+                <input type="checkbox" value="remember-me"> Remember me
+                <span class="pull-right"> <a href="#"> Forgot Password?</a></span>
+            </label>
+            <button class="btn btn-primary btn-lg btn-block" type="submit">{% trans 'Log in' %}</button>
+            <button class="btn btn-info btn-lg btn-block" type="submit">{% trans "Sign Up" %}</button>
+        </div>
+        <input type="hidden" name="next" value="{{ next }}" />
+
+
+      </form>
+    <div class="text-right">
+            <div class="credits">
+                <!-- 
+                    All the links in the footer should remain intact. 
+                    You can delete the links only if you purchased the pro version.
+                    Licensing information: https://bootstrapmade.com/license/
+                    Purchase the pro version form: https://bootstrapmade.com/buy/?theme=NiceAdmin
+                -->
+                <a href="https://bootstrapmade.com/free-business-bootstrap-themes-website-templates/">Business Bootstrap Themes</a> by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+            </div>
+        </div>
+    </div>
+
+
+  </body>
+</html>
