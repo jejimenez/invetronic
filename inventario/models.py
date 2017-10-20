@@ -5,9 +5,11 @@ class Company(models.Model):
     class Meta:
         verbose_name = ("Empresa")
     name = models.CharField(max_length=500, verbose_name="nombre")
-    address = models.CharField(max_length=500, verbose_name="dirección")
-    person_contact = models.CharField(max_length=500, verbose_name="persona de contacto")
     nit = models.CharField(max_length=500, verbose_name="nit")
+    address = models.CharField(max_length=500, verbose_name="dirección", blank=True, null=True)
+    telephone = models.CharField(max_length=15, verbose_name="teléfono", blank=True, null=True)
+    person_contact = models.CharField(max_length=500, verbose_name="persona de contacto", blank=True, null=True)
+    photo = models.ImageField(upload_to='company/img', verbose_name="imagen", blank=True, null=True)
     def __str__(self):
         return self.name
 

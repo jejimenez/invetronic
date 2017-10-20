@@ -2,5 +2,5 @@
  psycopg2
  Pillow
  bootstrap-admin
- templated-docs
  django_compressor
+ pylokit

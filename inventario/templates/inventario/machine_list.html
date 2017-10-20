@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block content %}
 <h1>Machines</h1>
 <ul>
 {% for machine in object_list %}
@@ -7,3 +8,4 @@
     <li>No articles yet.</li>
 {% endfor %}
 </ul>
+{% endblock %}
