@@ -13,7 +13,7 @@ from templated_docs_adecuated.http import FileResponse
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
-from inventario.models import Machine
+from inventario.models import Machine, HardwareComponent, SoftwareComponent
 from PIL import Image as Img
 
 from common import utils
@@ -27,9 +27,27 @@ def machine_detail_view(request, pk_machine):
     
     machine = Machine.objects.select_related('company').get(pk=pk_machine)
     company = machine.company
+
+    component = HardwareComponent.objects.filter(machine=machine)
+    component_context = []
+    i = 1
+    for comp in component:
+        #component_context[i] = {'component_type':comp.component_type, 'brand':comp.brand, 'model':comp.model}
+        #i =+1
+        component_context.append({'component_type':comp.component_type or "", 'brand':comp.brand or "", 'model':comp.model or "",
+            'serie':comp.serie or "", 'size':comp.size or "", 'features':comp.features or ""})
+
+    component = SoftwareComponent.objects.filter(machine=machine)
+    swcomponent_context = []
+    i = 1
+    for comp in component:
+        #component_context[i] = {'component_type':comp.component_type, 'brand':comp.brand, 'model':comp.model}
+        #i =+1
+        swcomponent_context.append({'component_type':comp.component_type or "", 'name':comp.name or "", 'release':comp.release or "",
+            'bits':comp.bits or "", 'compilation':comp.compilation or "", 'features':comp.features or ""})
+
     doctype = 'pdf'
-    machine_context = model_to_dict(machine,
-    fields = ['id','name','company','machine_sequence'])
+    machine_context = model_to_dict(machine)
     company_context = model_to_dict(company,
     fields = ['id','name','photo_thumbnail1','address','telephone'])
     company_context['name'] = str.upper(company_context['name'])
@@ -38,6 +56,8 @@ def machine_detail_view(request, pk_machine):
         context['user'] = {'label':'Usuario', 'name':request.user.first_name+" "+request.user.last_name}
     else:
         context['user'] = {'label':'', 'name':''}
+    context['components'] = component_context
+    context['swcomponents'] = swcomponent_context
     print(context)
     filename = fill_template(
         'inventario/machine_detail2.odt', context,
