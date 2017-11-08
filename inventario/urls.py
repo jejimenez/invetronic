@@ -20,7 +20,7 @@ from inventario import views
 urlpatterns = [
     # ex: /inventario/2/printmachine/
     url(r'^$', views.MachineListView.as_view(), name='machine_list'),
+    url(r'^machine/(?P<pk>[0-9]+)/$', views.MachineDetail.as_view(), name='machine_detail'),
     url(r'^(?P<pk_machine>[0-9]+)/printmachine/$', views.machine_detail_view, name='printmachine'),
-    url(r'^machine_detail/', views.machine_detail_view),
     
 ]

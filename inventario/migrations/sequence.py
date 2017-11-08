@@ -8,7 +8,7 @@ from django.db import migrations
 class Migration(migrations.Migration):                                                                                                                                                                              
                                                                                                                                                                                                                      
     dependencies = [                                                                                                                                                                                                
-        ('inventario', '0001_company_machine'),                                                                                                                                                                                   
+        ('inventario', '0001_initial'),                                                                                                                                                                                   
     ]
 
     operations = [
@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
         migrations.RunSQL(
             "CREATE or REPLACE FUNCTION fn_machine_seq() RETURNS trigger AS $fn_machine_seq$ "+
             "BEGIN "+
-            "NEW.machine_sequence := 'HV'||to_char(now(),'YYYYMMDD')||lpad(nextval('machine_seq'), 5, '0'); "+
+            "NEW.machine_sequence := 'HV'||to_char(now(),'YYYYMMDD')||lpad(nextval('machine_seq')::char, 5, '0'); "+
             "RETURN NEW; "+
             "END; "+
             "$fn_machine_seq$ LANGUAGE plpgsql;",

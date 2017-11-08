@@ -4,7 +4,7 @@
 <head>
   <meta name="viewport" content="width=device-width">
   <meta charset="utf-8">
-  <title>{% block title %}Django Simple Login{% endblock %}</title>
+  <title>{% block title %}Invetronic{% endblock %}</title>
   <base href="/" />
   {% include 'stylesheets.html' %}
   {% block extrahead %}{% endblock %}
@@ -88,7 +88,7 @@
                             <span class="profile-ava">
                                 <img alt="" src="{% static 'img/avatar1_small.jpg'%}">
                             </span>
-                            <span class="username">Jenifer Smith</span>
+                            <span class="username">{{ user }}</span>
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu extended logout">
@@ -115,19 +115,24 @@
       <aside>
           <div id="sidebar"  class="nav-collapse ">
               <!-- sidebar menu start-->
-              <ul class="sidebar-menu">                
+              <ul class="sidebar-menu">
+                  <li class="">
+                    
+
+                    <img alt="" src="{{ user.company.photo_url|default_if_none:'#' }}" width="180px">
+                  </li>
                   <li class="">
                       <a class="" href="dashboard">
                           <i class="icon_house_alt"></i>
                           <span>Dashboard</span>
                       </a>
                   </li>
-          <li class="sub-menu">
+                  <li class="sub-menu">
                       <a href="inventario/" class="">
                           <i class="fa fa-cubes"></i>
                           <span>Inventario</span>
                       </a>
-                  </li>       
+                  </li>
                   <li class="sub-menu">
                       <a href="javascript:;" class="">
                           <i class="fa fa-bug"></i>
@@ -135,7 +140,7 @@
                           <span class="menu-arrow arrow_carrot-right"></span>
                       </a>
                       <ul class="sub">
-                          <li><a class="" href="incidentes">Incidentes</a></li>
+                          <li><a class="" href="tickets">Incidentes</a></li>
                           <li><a class="" href="ordenesdet">Ordentes de Trabajo</a></li>
                       </ul>
                   </li>
@@ -166,7 +171,20 @@
             <li><i class="{{ breadcrumb.icon }}"></i><a href="{{ breadcrumb.url }}">{{ breadcrumb.txt }}</a></li>
             {% endfor %}
           </ol>
-          <h3 class="page-header"><i class="fa fa fa-bars"></i> {{ page_title }}</h3>
+
+          <div class="row row justify-content-between">
+            <div class="col-lg-6">
+              <h3 class="page-header"><i class="fa fa fa-bars"></i> {{ page_title }}</h3>
+            </div>
+            <div class="col-lg-6 text-right">
+              <!-- page start-->
+              {% block buttons %}
+              {% endblock %}
+              <!-- page end-->
+              </a>
+            </div>
+          </div>
+
         </div>
       </div>
               <!-- page start-->

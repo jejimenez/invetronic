@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'inventario',
     'authentication',
+    'tickets',
     'templated_docs_adecuated',
     'bootstrap_admin', # always before django.contrib.admin,
     'compressor',
@@ -114,6 +115,7 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
+AUTH_USER_MODEL = 'authentication.User'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/

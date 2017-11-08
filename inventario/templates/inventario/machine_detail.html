@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block buttons %}
+    <a title="Imprimir" class="btn btn-info btn-sm" href='/inventario/{{ machine.id }}/printmachine'><span class="fa fa-print"> Imprimir</span>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+
+  <div class="col-lg-12">
+      <section class="panel">
+          <header class="panel-heading">
+              Detalle Máquina {{ object.name }}
+          </header>
+          <div class="panel-body bio-graph-info">
+              <div class="row">
+                  <div class="bio-row">
+                      <p><span>Nombre </span>: {{object.name|default_if_none:"--" }} </p>
+                  </div>
+                  <div class="bio-row">
+                      <p><span>Ip</span>: {{object.ip|default_if_none:"--" }} </p>
+                  </div>                                              
+                  <div class="bio-row">
+                      <p><span>Mac Address</span>: {{object.mac_address|default_if_none:"--" }}</p>
+                  </div>
+                  <div class="bio-row">
+                      <p><span>Compartido </span>: {{object.shared|default_if_none:"--" }} </p>
+                  </div>
+                  <div class="bio-row">
+                      <p><span>Impresoras </span>: {{object.printers|default_if_none:"--" }}</p>
+                  </div>
+                  <div class="bio-row">
+                      <p><span>S.O. </span>:{{object.os}}</p>
+                  </div>
+                  <div class="bio-row">
+                      <p><span>Fecha Compra </span>: {{object.buyed_date|default_if_none:"--" }}</p>
+                  </div>
+                  <div class="bio-row">
+                      <p><span>Proveedor </span>:{{object.supplier|default_if_none:"--" }}</p>
+                  </div>
+                  <div class="bio-row">
+                      <p><span>Meses Garantía </span>:{{object.warranty_months|default_if_none:"--" }}</p>
+                  </div>
+              </div>
+          </div>
+      </section>
+   </div>
+</div>
+<div class="row">
+  <div class="col-lg-6">
+      <section class="panel">
+          <header class="panel-heading">
+              Componentes Hardware
+          </header>
+                        <table class="table table-responsive table-advance table-hover" style="font-size: x-small;">
+					        <colgroup>
+					            <col class="col-md-2">
+					            <col class="col-md-2">
+					            <col class="col-md-2">
+					            <col class="col-md-2">
+					            <col class="col-md-1">
+					            <col class="col-md-3">
+					        </colgroup>
+                           <tbody>
+                              <tr>
+                                 <th>Tipo Componente</th>
+                                 <th>Marca</th>
+                                 <th>Modelo</th>
+                                 <th>Serie</th>
+                                 <th>Tamaño</th>
+                                 <th>Características</th>
+                              </tr>
+								{% for comp in HardwareComponent %}
+                              <tr>
+                                 <td>{{ comp.component_type|default_if_none:"--" }}</td>
+                                 <td>{{ comp.brand|default_if_none:"--" }}</td>
+                                 <td>{{ comp.model|default_if_none:"--" }}</td>
+                                 <td>{{ comp.serie|default_if_none:"--" }}</td>
+                                 <td>{{ comp.size|default_if_none:"--" }}</td>
+                                 <td>{{ comp.features|default_if_none:"--" }}</td>
+                              </tr>
+								{% empty %}
+                              <tr>
+                                 <td colspan="7">No se encontraron componentes registrados</td>
+                              </tr>
+								{% endfor %}                         
+                           </tbody>
+                        </table>
+      </section>
+   </div>
+  <div class="col-lg-6">
+      <section class="panel">
+          <header class="panel-heading">
+              Componentes Software
+          </header>
+                        <table class="table table-responsive table-advance table-hover"  style="font-size: x-small;">
+					        <colgroup>
+					            <col class="col-md-4">
+					            <col class="col-md-7">
+					        </colgroup>
+                           <tbody>
+                              <tr>
+                                 <th>Tipo Componente</th>
+                                 <th>Nombre</th>
+                                 <th>Versión</th>
+                                 <th>Compilación</th>
+                                 <th>Bits</th>
+                                 <th>Características</th>
+                              </tr>
+								{% for comp in SoftwareComponent %}
+                              <tr>
+                                 <td>{{ comp.component_type|default_if_none:"--" }}</td>
+                                 <td>{{ comp.name|default_if_none:"--" }}</td>
+                                 <td>{{ comp.release|default_if_none:"--" }}</td>
+                                 <td>{{ comp.compilation|default_if_none:"--" }}</td>
+                                 <td>{{ comp.bits|default_if_none:"--" }}</td>
+                                 <td>{{ comp.features|default_if_none:"--" }}</td>
+                              </tr>
+								{% empty %}
+                              <tr>
+                                 <td colspan="7">No se encontraron componentes registrados</td>
+                              </tr>
+								{% endfor %}                         
+                           </tbody>
+                        </table>
+      </section>
+   </div>
+</div>
+{% endblock %}

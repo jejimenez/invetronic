@@ -28,7 +28,7 @@ class MachineAdmin(admin.ModelAdmin):
 class CompanyAdmin(admin.ModelAdmin):
     # A template for a customized change view:
     exclude = ('photo_thumbnail1',)
-    list_display = ('name', 'nit', 'address','telephone','cellphone','legal_representative')
+    list_display = ('id','name', 'nit', 'address','telephone','cellphone','legal_representative')
 
 
 

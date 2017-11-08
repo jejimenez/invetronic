@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.core import serializers
 from django.forms.models import model_to_dict
 from django.views.generic.list import ListView
+from django.views.generic import DetailView
 from django.utils import timezone
 
 from templated_docs_adecuated import fill_template
@@ -14,6 +15,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
 from inventario.models import Machine, HardwareComponent, SoftwareComponent
+from authentication.models import TIPO_USUARIO
 from PIL import Image as Img
 
 from common import utils
@@ -68,6 +70,7 @@ def machine_detail_view(request, pk_machine):
 
 
 class MachineListView(ListView):
+
     model = Machine
 
     def get_context_data(self, **kwargs):
@@ -75,9 +78,36 @@ class MachineListView(ListView):
         context['now'] = timezone.now()
         context['page_title'] = 'Inventario'
         context['breadcrumbs'] = utils.get_breadcrumbs_from_url(self.request.get_full_path())
-        #print(self.request.user)
+        if self.request.user.is_superuser:
+            context['object_list'] = Machine.objects.all()
+        elif self.request.user.tipo_usuario == 'CLIENTE' or self.request.user.tipo_usuario == 'CLIENTE_ADMIN':
+            context['object_list'] = Machine.objects.filter(company=self.request.user.company.pk)
+        elif self.request.user.tipo_usuario == 'TECNICO': # falta implementar logica para buscar machinas asignadas a los tickets
+            context['object_list'] = Machine.objects.filter(company=self.request.user.company.pk)
+        else:
+            context['object_list'] = []
+        #print(self.request.__dict__)
         return context
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(MachineListView, self).dispatch(*args, **kwargs)
+
+
+class MachineDetail(DetailView):
+
+    model = Machine
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(MachineDetail, self).get_context_data(**kwargs)
+        context['page_title'] = 'Detalle Máquina'
+        context['breadcrumbs'] = utils.get_breadcrumbs_from_url(self.request.get_full_path())
+        # Add in a QuerySet of all the books
+        context['SoftwareComponent'] = SoftwareComponent.objects.filter(machine=self.object.pk)
+        context['HardwareComponent'] = HardwareComponent.objects.filter(machine=self.object.pk)
+        return context
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(MachineDetail, self).dispatch(*args, **kwargs)

@@ -10,6 +10,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.forms import fields
 #from io import BytesIO
 
+
+
 # MAC Address field
 MAC_RE = r'^([0-9a-fA-F]{2}([:-]?|$)){6}$'
 mac_re = re.compile(MAC_RE)
@@ -73,8 +75,14 @@ class Company(models.Model):
             self.photo_thumbnail1= InMemoryUploadedFile(output,'ImageField', "%s_thumbnail1.jpg" %self.photo.name, 'image/jpeg', sys.getsizeof(output), None)
             if self.pk:
                 try:
-                    os.remove(settings.MEDIA_ROOT+self.old_photo.name)
-                    os.remove(settings.MEDIA_ROOT+self.old_photo_thumbnail1.name)
+                    os.remove(settings.MEDIA_ROOT+(self.old_photo.name or ""))
+                except OSError as e:
+                    if e.errno != errno.ENOENT:
+                        None
+                    else:
+                        print(e)
+                try:
+                    os.remove(settings.MEDIA_ROOT+(self.old_photo_thumbnail1.name or ""))
                 except OSError as e:
                     if e.errno != errno.ENOENT:
                         None
@@ -82,7 +90,10 @@ class Company(models.Model):
                         print(e)
         super(Company, self).save(*args, **kwargs)
 
-
+    @property
+    def photo_url(self):
+        if self.photo and hasattr(self.photo, 'url'):
+            return self.photo.url
     #@classmethod
     #def create(self):
     #    book = cls(title=title)
@@ -102,6 +113,12 @@ class Machine(models.Model):
     printers = models.CharField(max_length=200, verbose_name="impresoras", blank=True, null=True)
     os = models.CharField(max_length=200, verbose_name="sistema operativo", blank=True, null=True)
     machine_sequence = models.CharField(max_length=200, verbose_name="número de secuencia", blank=True, null=True)
+
+    buyed_date = models.DateField(verbose_name="fecha de compra",blank=True, null=True)
+    supplier = models.CharField(max_length=200, verbose_name="proveedor", blank=True, null=True)
+    warranty_months = models.PositiveSmallIntegerField(verbose_name="meses garantía", blank=True, null=True)
+    creation_time = models.DateTimeField(auto_now_add=True,verbose_name="fecha de creacion",blank=False, null=False)
+
 
     def __str__(self):
         return self.company.name+" "+self.name
@@ -134,6 +151,7 @@ class HardwareComponentType(models.Model):
 
 class HardwareComponent(models.Model):
     class Meta:
+        verbose_name_plural = ("Componentes de Hardware")
         verbose_name = ("Componente de Hardware")
     machine = models.ForeignKey(Machine, on_delete=models.CASCADE, verbose_name="máquina", related_name='hw_machine')
     component_type = models.ForeignKey(HardwareComponentType, on_delete=models.CASCADE, verbose_name="tipo_componente", related_name='hw_tipo_componente')
@@ -156,6 +174,7 @@ class SoftwareComponentType(models.Model):
 
 class SoftwareComponent(models.Model):
     class Meta:
+        verbose_name_plural = ("Componentes de Software")
         verbose_name = ("Componente de Software")
     machine = models.ForeignKey(Machine, on_delete=models.CASCADE, verbose_name="máquina", related_name='sw_machine')
     component_type = models.ForeignKey(SoftwareComponentType, on_delete=models.CASCADE, verbose_name="tipo_componente", related_name='sw_tipo_componente')
