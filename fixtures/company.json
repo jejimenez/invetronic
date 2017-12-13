@@ -1,0 +1,16 @@
+[
+  {
+    "model": "inventario.company",
+    "pk": 1,
+    "fields": {
+      "name": "Invetronic",
+      "nit": "901.065.797-9",
+      "address": "Cll 14b # 116-69 Bl 2 C 5-2",
+      "telephone": "810 1121",
+      "cellphone": "320 8929273",
+      "legal_representative": "Eduardo Rozo",
+      "photo": "",
+      "photo_thumbnail1": ""
+    }
+  }
+]

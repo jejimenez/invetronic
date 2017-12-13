@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 
+import sys
+#from PIL import Image
+#sys.modules['Image'] = Image
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -86,6 +90,7 @@ DATABASES = {
         'NAME': 'invetronicdb',
         'USER': 'invetronicdb',
         'PASSWORD': 'invetronicdb',
+        #'HOST': 'localhost', # production
         'HOST': 'db',
         'PORT': '5432',
     }
@@ -146,7 +151,7 @@ print(os.path.join(BASE_DIR, "static"))
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = 'static/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "static","media")
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -157,9 +162,12 @@ MEDIA_URL = '/static/media/'
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = '/'
+STATIC_ROOT = '/srv/www/vhosts/dummy-host.example.com/invetronicstatic/'
 
 ADMIN_SITE_HEADER = "INVETRONIC"
-ADMIN_SITE_TITLE = "Panel de Administración"
+ADMIN_SITE_TITLE = "Panel de Administracion"
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGIN_URL = '/'
+
+
+#TEMPLATED_DOCS_LIBREOFFICE_PATH = '/usr/lib64/libreoffice/program/' #production
