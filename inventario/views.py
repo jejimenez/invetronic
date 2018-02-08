@@ -53,7 +53,11 @@ def machine_detail_view(request, pk_machine):
     company_context = model_to_dict(company,
     fields = ['id','name','photo_thumbnail1','address','telephone'])
     company_context['name'] = str.upper(company_context['name'])
-    context = {**machine_context, 'company':{**company_context}}
+    
+    #context = {}
+    context = machine_context
+    context['company'] = company_context
+    #context = {**machine_context, 'company':{**company_context}}
     if request.user.is_authenticated:
         context['user'] = {'label':'Usuario', 'name':request.user.first_name+" "+request.user.last_name}
     else:
