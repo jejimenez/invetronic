@@ -4,8 +4,6 @@ from authentication.models import User
 from inventario.models import Machine
 
 # Create your models here.
-
-
 class Incident(models.Model):
     class Meta:
         verbose_name = ("Incidente")

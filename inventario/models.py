@@ -9,6 +9,7 @@ from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from django.forms import fields
 from django.core.validators import RegexValidator
+from common.utils import validate_file_extension
 #from io import BytesIO
 
 
@@ -16,6 +17,11 @@ from django.core.validators import RegexValidator
 # MAC Address field
 MAC_RE = r'^([0-9a-fA-F]{2}([:-]?|$)){6}$'
 mac_re = re.compile(MAC_RE)
+
+BUG_STATUS = (
+    ('O','Abierto'),
+    ('C','Cerrado'),
+)
 
 TIPO_DOCUMENTO = (
     ('NIT','NIT'),
@@ -66,7 +72,9 @@ class Company(models.Model):
     
     email_legal_representative = models.CharField(max_length=500, verbose_name="correo electrónico representante legal", blank=True, null=True)
 
-    photo = models.ImageField(upload_to='company/img', verbose_name="imagen", blank=True, null=True)
+    status = models.CharField(max_length=1,choices=BUG_STATUS,default='O',verbose_name="estado", blank=True, null=True)
+
+    photo = models.ImageField(upload_to='company/img', verbose_name="imagen",validators=[validate_file_extension], blank=True, null=True)
     photo_thumbnail1 = models.ImageField(upload_to='company/img', verbose_name="imagen 250x250", blank=True, null=True)
 
     def __str__(self):
@@ -87,7 +95,8 @@ class Company(models.Model):
             image = Img.open(bytes_img)
             image.thumbnail((250,250), Img.ANTIALIAS)
             output = io.BytesIO()
-            image.save(output, format='JPEG', quality=75)
+            #print(image.format)
+            image.save(output, format=image.format, quality=75)
             output.seek(0)
             self.photo_thumbnail1= InMemoryUploadedFile(output,'ImageField', "%s_thumbnail1.jpg" %self.photo.name, 'image/jpeg', sys.getsizeof(output), None)
             if self.pk:
@@ -143,6 +152,8 @@ class Machine(models.Model):
     warranty_months = models.PositiveSmallIntegerField(verbose_name="meses garantía", blank=True, null=True)
     creation_time = models.DateTimeField(auto_now_add=True,verbose_name="fecha de creacion",blank=False, null=False)
 
+    status = models.CharField(max_length=1,choices=BUG_STATUS,default='O',verbose_name="estado", blank=True, null=True)
+
 
     def __str__(self):
         return self.company.name+" "+self.name
@@ -170,6 +181,8 @@ class HardwareComponentType(models.Model):
         verbose_name_plural = ("Tipos de Componente Hardware")
         verbose_name = ("Tipo de Componente Hardware")
     name = models.CharField(max_length=200, verbose_name="nombre")
+    status = models.CharField(max_length=1,choices=BUG_STATUS,default='O',verbose_name="estado", blank=True, null=True)
+
     def __str__(self):
         return self.name
 
@@ -184,7 +197,9 @@ class HardwareComponent(models.Model):
     serie = models.CharField(max_length=200, verbose_name="serie", null=True, blank=True)
     size = models.CharField(max_length=200, verbose_name="tamaño", null=True, blank=True)
     features = models.CharField(max_length=500, verbose_name="características", null=True, blank=True)
-    
+    status = models.CharField(max_length=1,choices=BUG_STATUS,default='O',verbose_name="estado", blank=True, null=True)
+
+  
     def __str__(self):
         return self.machine.name + " - " +self.component_type.name
 
@@ -193,6 +208,8 @@ class SoftwareComponentType(models.Model):
         verbose_name_plural = ("Tipos de Componente Software")
         verbose_name = ("Tipo de Componente Software")
     name = models.CharField(max_length=200, verbose_name="nombre")
+    status = models.CharField(max_length=1,choices=BUG_STATUS,default='O',verbose_name="estado", blank=True, null=True)
+
     def __str__(self):
         return self.name
 
@@ -207,6 +224,7 @@ class SoftwareComponent(models.Model):
     compilation = models.CharField(max_length=200, verbose_name="compilación", null=True, blank=True)
     bits = models.CharField(max_length=200, verbose_name="bits", null=True, blank=True)
     features = models.CharField(max_length=500, verbose_name="características", null=True, blank=True)
+    status = models.CharField(max_length=1,choices=BUG_STATUS,default='O',verbose_name="estado", blank=True, null=True)
     
     def __str__(self):
         return self.machine.name + " - " +self.component_type.name

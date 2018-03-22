@@ -11,7 +11,6 @@ from django.utils.safestring import mark_safe
 from django.contrib import admin
 
 
-
 class AdminImageWidget(AdminFileWidget):
     def render(self, name, value, attrs=None):
         output = []
@@ -35,17 +34,56 @@ class ImageWidgetAdmin(admin.ModelAdmin):
         return super(ImageWidgetAdmin, self).formfield_for_dbfield(db_field, **kwargs)
 
 
-
 class SoftwareComponentInLine(admin.TabularInline):
     model = SoftwareComponent
     #exclude = ('machine',)
     fields = ('component_type', 'name', 'release','compilation','bits','features',)
+
+    def get_extra (self, request, obj=None, **kwargs):
+        """Dynamically sets the number of extra forms. 0 if the related object
+        already exists or the extra configuration otherwise."""
+        if obj:
+            # Don't add any extra forms if the related object already exists.
+            return 0
+        return self.extra
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        person = kwargs.pop('obj', None)
+        if db_field.name == 'component_type':
+            kwargs['queryset'] = SoftwareComponentType.objects.filter(status='O')
+        return super(SoftwareComponentInLine, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 class HardwareComponentInLine(admin.TabularInline):
     model = HardwareComponent
     #exclude = ('machine',)
     fields = ('component_type', 'brand', 'model','serie','size','features',)
+    my_id_for_formfield = None
+
+    def get_extra (self, request, obj=None, **kwargs):
+        """Dynamically sets the number of extra forms. 0 if the related object
+        already exists or the extra configuration otherwise."""
+        if obj:
+            # Don't add any extra forms if the related object already exists.
+            return 0
+        return self.extra
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        person = kwargs.pop('obj', None)
+        if db_field.name == 'component_type':
+            kwargs['queryset'] = HardwareComponentType.objects.filter(status='O')
+        return super(HardwareComponentInLine, self).formfield_for_foreignkey(db_field, request, **kwargs)
+
+    """
+    def formfield_for_foreignkey(self, db_field, request=None, **kwargs):
+        print(db_field)
+        field = super(HardwareComponentInLine, self).formfield_for_foreignkey(db_field, request, **kwargs)
+        #if request._obj_ is not None:
+        #    field.queryset = field.queryset.filter(building__exact = request._obj_)  
+        #else:
+        #    field.queryset = field.queryset.none()
+        field.queryset = field.queryset.filter(status = 'O')
+        return field"""
 
 class MachineAdmin(admin.ModelAdmin):
     # A template for a customized change view:
@@ -55,6 +93,7 @@ class MachineAdmin(admin.ModelAdmin):
     inlines = [
         HardwareComponentInLine,SoftwareComponentInLine
     ]
+
 
 class CompanyAdmin(ImageWidgetAdmin):
     # A template for a customized change view:
