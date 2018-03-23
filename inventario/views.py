@@ -14,7 +14,7 @@ from templated_docs_adecuated.http import FileResponse
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
-from inventario.models import Machine, HardwareComponent, SoftwareComponent
+from inventario.models import Machine, HardwareComponent, SoftwareComponent, Shared, Printer
 from authentication.models import TIPO_USUARIO
 from PIL import Image as Img
 
@@ -22,31 +22,39 @@ from common import utils
 
 
 def machine_detail_view(request, pk_machine):
-    print(request.user.username)
-    print(request.user.first_name)
-    print(request.user.last_name)
-    print(request.user.email)
+    #print(request.user.username)
+    #print(request.user.first_name)
+    #print(request.user.last_name)
+    #print(request.user.email)
     
     machine = Machine.objects.select_related('company').get(pk=pk_machine)
     company = machine.company
-
+    # fetching hardware components to append in context file
     component = HardwareComponent.objects.filter(machine=machine)
     component_context = []
     i = 1
     for comp in component:
-        #component_context[i] = {'component_type':comp.component_type, 'brand':comp.brand, 'model':comp.model}
-        #i =+1
         component_context.append({'component_type':comp.component_type or "", 'brand':comp.brand or "", 'model':comp.model or "",
             'serie':comp.serie or "", 'size':comp.size or "", 'features':comp.features or ""})
-
+    # fetching software components to append in context file
     component = SoftwareComponent.objects.filter(machine=machine)
     swcomponent_context = []
     i = 1
     for comp in component:
-        #component_context[i] = {'component_type':comp.component_type, 'brand':comp.brand, 'model':comp.model}
-        #i =+1
         swcomponent_context.append({'component_type':comp.component_type or "", 'name':comp.name or "", 'release':comp.release or "",
             'bits':comp.bits or "", 'compilation':comp.compilation or "", 'features':comp.features or ""})
+    # fetching shared  to append in context file
+    component = Shared.objects.filter(machine=machine)
+    shared_context = []
+    i = 1
+    for comp in component:
+        shared_context.append({'description':comp.description or ""})
+    # fetching shared  to append in context file
+    component = Printer.objects.filter(machine=machine)
+    printer_context = []
+    i = 1
+    for comp in component:
+        printer_context.append({'description':comp.description or ""})
 
     doctype = 'pdf'
     machine_context = model_to_dict(machine)
@@ -64,7 +72,9 @@ def machine_detail_view(request, pk_machine):
         context['user'] = {'label':'', 'name':''}
     context['components'] = component_context
     context['swcomponents'] = swcomponent_context
-    print(context)
+    context['shared'] = shared_context
+    context['printer'] = printer_context
+    #print(context)
     filename = fill_template(
         'inventario/machine_detail2.odt', context,
         output_format=doctype)

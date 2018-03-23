@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import Machine, Company, HardwareComponent, HardwareComponentType, SoftwareComponent, SoftwareComponentType
+from .models import Machine, Company, HardwareComponent, HardwareComponentType, SoftwareComponent, SoftwareComponentType, Shared, Printer
 
 
 from django.contrib.admin.widgets import AdminFileWidget
@@ -85,13 +85,44 @@ class HardwareComponentInLine(admin.TabularInline):
         field.queryset = field.queryset.filter(status = 'O')
         return field"""
 
+
+class SharedInLine(admin.TabularInline):
+    model = Shared
+    #exclude = ('machine',)
+    fields = ('description',)
+    my_id_for_formfield = None
+
+    def get_extra (self, request, obj=None, **kwargs):
+        """Dynamically sets the number of extra forms. 0 if the related object
+        already exists or the extra configuration otherwise."""
+        if obj:
+            # Don't add any extra forms if the related object already exists.
+            return 0
+        return self.extra
+
+
+class PrinterInLine(admin.TabularInline):
+    model = Printer
+    #exclude = ('machine',)
+    fields = ('description',)
+    my_id_for_formfield = None
+
+    def get_extra (self, request, obj=None, **kwargs):
+        """Dynamically sets the number of extra forms. 0 if the related object
+        already exists or the extra configuration otherwise."""
+        if obj:
+            # Don't add any extra forms if the related object already exists.
+            return 0
+        return self.extra
+
+
 class MachineAdmin(admin.ModelAdmin):
     # A template for a customized change view:
     readonly_fields = ('machine_sequence',)
     change_form_template = 'admin/machine/change_form.html'
     list_display = ('name','company','ip','mac_address','os',)
     inlines = [
-        HardwareComponentInLine,SoftwareComponentInLine
+        HardwareComponentInLine,SoftwareComponentInLine,SharedInLine,PrinterInLine
     ]
 
 

@@ -19,8 +19,8 @@ MAC_RE = r'^([0-9a-fA-F]{2}([:-]?|$)){6}$'
 mac_re = re.compile(MAC_RE)
 
 BUG_STATUS = (
-    ('O','Abierto'),
-    ('C','Cerrado'),
+    ('A','Activo'),
+    ('I','Inactivo'),
 )
 
 TIPO_DOCUMENTO = (
@@ -142,8 +142,8 @@ class Machine(models.Model):
     name = models.CharField(max_length=200, verbose_name="nombre")
     ip = models.GenericIPAddressField(blank=True, null=True)
     mac_address = MACAddressField(verbose_name="mac address", blank=True, null=True)
-    shared = models.CharField(max_length=200, verbose_name="compartido", blank=True, null=True)
-    printers = models.CharField(max_length=200, verbose_name="impresoras", blank=True, null=True)
+    #shared = models.CharField(max_length=200, verbose_name="compartido", blank=True, null=True)
+    #printers = models.CharField(max_length=200, verbose_name="impresoras", blank=True, null=True)
     os = models.CharField(max_length=200, verbose_name="sistema operativo", blank=True, null=True)
     machine_sequence = models.CharField(max_length=200, verbose_name="número de secuencia", blank=True, null=True)
 
@@ -229,4 +229,29 @@ class SoftwareComponent(models.Model):
     def __str__(self):
         return self.machine.name + " - " +self.component_type.name
 
+
+class Shared(models.Model):
+    class Meta:
+        verbose_name_plural = ("Recursos Compartidos")
+        verbose_name = ("Recurso Compartido")
+    
+    def __str__(self):
+        return " - "
+
+    machine = models.ForeignKey(Machine, on_delete=models.CASCADE, verbose_name="máquina", related_name='shared_machine')
+    status = models.CharField(max_length=1,choices=BUG_STATUS,default='O',verbose_name="estado", blank=True, null=True)
+    description = models.CharField(max_length=200, verbose_name="descripción")
+    
+
+class Printer(models.Model):
+    class Meta:
+        verbose_name_plural = ("Impresoras")
+        verbose_name = ("Impresora")
+    
+    def __str__(self):
+        return " - "
+
+    machine = models.ForeignKey(Machine, on_delete=models.CASCADE, verbose_name="máquina", related_name='printer_machine')
+    status = models.CharField(max_length=1,choices=BUG_STATUS,default='A',verbose_name="estado", blank=True, null=True)
+    description = models.CharField(max_length=200, verbose_name="descripción")
 
